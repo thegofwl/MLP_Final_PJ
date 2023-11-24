@@ -28,11 +28,15 @@
       text-align: center;
       margin: 20px auto;
     }
-
-    .main-container{
+    
+    .main-container {
       margin-bottom: 10rem;
     }
-
+    
+    .content-user-profile {
+      border: 1px solid ghostwhite;
+      border-radius: 2rem;
+    }
   </style>
   <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container text-center py-5">
@@ -90,23 +94,19 @@
 
     <div class="content-box" id="content1" style="display: flex;">
       <div class="container">
-        <div class="content-user-profile">
+        <div class="content-user-profile mx-5 p-5">
           <div class="row justify-content-evenly">
             <div class="col-8">
-              <div class="card">
-                <div class="card-content-1 border-bottom">
-                  <div class="card-header">이름</div>
-                  <div class="card-body">김민제</div>
-                </div>
-                <div class="card-content-2 border-bottom">
-                  <div class="card-header">소개</div>
-                  {% comment %} admin.introduce {% endcomment %}
-                  <div class="card-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vitae quis obcaecati facilis enim ratione excepturi ab animi commodi, earum optio quo illum. Tenetur sint nobis esse eveniet provident. Optio!</div>
-                </div>
-                <div class="card-content-3">
-                  <div class="card-header">github</div>
-                  <div class="card-body">https://github.com/Imshyeon</div>
-                </div>
+              <div class="admin-name mb-4">
+                <h3>김민제</h3>
+              </div>
+              <div class="admin-self-introduce mb-4">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio nam fuga quo consequatur reiciendis consectetur aliquam obcaecati ipsa! Necessitatibus, neque odit. Odit repellendus dolorum repudiandae optio suscipit rerum minima velit.</p>
+              </div>
+              <div class="admin-github">
+                <p class="mb-2">
+                  <a href="https://github.com/eppae"><i class="fab fa-github fa-lg text-primary me-3 color-changed"></i>github.com/eppae</a>
+                </p>
               </div>
             </div>
           </div>
@@ -116,23 +116,19 @@
 
     <div class="content-box" id="content2">
       <div class="container">
-        <div class="content-user-profile">
+        <div class="content-user-profile mx-5 p-5">
           <div class="row justify-content-evenly">
             <div class="col-8">
-              <div class="card">
-                <div class="card-content-1 border-bottom">
-                  <div class="card-header">이름</div>
-                  <div class="card-body">강수현</div>
-                </div>
-                <div class="card-content-2 border-bottom">
-                  <div class="card-header">소개</div>
-                  {% comment %} admin.introduce {% endcomment %}
-                  <div class="card-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vitae quis obcaecati facilis enim ratione excepturi ab animi commodi, earum optio quo illum. Tenetur sint nobis esse eveniet provident. Optio!</div>
-                </div>
-                <div class="card-content-3">
-                  <div class="card-header">github</div>
-                  <div class="card-body">https://github.com/Imshyeon</div>
-                </div>
+              <div class="admin-name mb-4">
+                <h3>강수현</h3>
+              </div>
+              <div class="admin-self-introduce mb-4">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio nam fuga quo consequatur reiciendis consectetur aliquam obcaecati ipsa! Necessitatibus, neque odit. Odit repellendus dolorum repudiandae optio suscipit rerum minima velit.</p>
+              </div>
+              <div class="admin-github">
+                <p class="mb-2">
+                  <a href="https://github.com/Imshyeon"><i class="fab fa-github fa-lg text-primary me-3 color-changed"></i>github.com/Imshyeon</a>
+                </p>
               </div>
             </div>
           </div>
@@ -142,23 +138,19 @@
 
     <div class="content-box" id="content3">
       <div class="container">
-        <div class="content-user-profile">
+        <div class="content-user-profile mx-5 p-5">
           <div class="row justify-content-evenly">
             <div class="col-8">
-              <div class="card">
-                <div class="card-content-1 border-bottom">
-                  <div class="card-header">이름</div>
-                  <div class="card-body">이동엽</div>
-                </div>
-                <div class="card-content-2 border-bottom">
-                  <div class="card-header">소개</div>
-                  {% comment %} admin.introduce {% endcomment %}
-                  <div class="card-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vitae quis obcaecati facilis enim ratione excepturi ab animi commodi, earum optio quo illum. Tenetur sint nobis esse eveniet provident. Optio!</div>
-                </div>
-                <div class="card-content-3">
-                  <div class="card-header">github</div>
-                  <div class="card-body">https://github.com/Imshyeon</div>
-                </div>
+              <div class="admin-name mb-4">
+                <h3>이동엽</h3>
+              </div>
+              <div class="admin-self-introduce mb-4">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio nam fuga quo consequatur reiciendis consectetur aliquam obcaecati ipsa! Necessitatibus, neque odit. Odit repellendus dolorum repudiandae optio suscipit rerum minima velit.</p>
+              </div>
+              <div class="admin-github">
+                <p class="mb-2">
+                  <a href="https://github.com/Imshyeon"><i class="fab fa-github fa-lg text-primary me-3 color-changed"></i>github.com/Imshyeon</a>
+                </p>
               </div>
             </div>
           </div>
@@ -168,23 +160,19 @@
 
     <div class="content-box" id="content4">
       <div class="container">
-        <div class="content-user-profile">
+        <div class="content-user-profile mx-5 p-5">
           <div class="row justify-content-evenly">
             <div class="col-8">
-              <div class="card">
-                <div class="card-content-1 border-bottom">
-                  <div class="card-header">이름</div>
-                  <div class="card-body">장우림</div>
-                </div>
-                <div class="card-content-2 border-bottom">
-                  <div class="card-header">소개</div>
-                  {% comment %} admin.introduce {% endcomment %}
-                  <div class="card-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vitae quis obcaecati facilis enim ratione excepturi ab animi commodi, earum optio quo illum. Tenetur sint nobis esse eveniet provident. Optio!</div>
-                </div>
-                <div class="card-content-3">
-                  <div class="card-header">github</div>
-                  <div class="card-body">https://github.com/Imshyeon</div>
-                </div>
+              <div class="admin-name mb-4">
+                <h3>장우림</h3>
+              </div>
+              <div class="admin-self-introduce mb-4">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio nam fuga quo consequatur reiciendis consectetur aliquam obcaecati ipsa! Necessitatibus, neque odit. Odit repellendus dolorum repudiandae optio suscipit rerum minima velit.</p>
+              </div>
+              <div class="admin-github">
+                <p class="mb-2">
+                  <a href="https://github.com/Imshyeon"><i class="fab fa-github fa-lg text-primary me-3 color-changed"></i>github.com/Imshyeon</a>
+                </p>
               </div>
             </div>
           </div>
@@ -194,23 +182,19 @@
 
     <div class="content-box" id="content5">
       <div class="container">
-        <div class="content-user-profile">
+        <div class="content-user-profile mx-5 p-5">
           <div class="row justify-content-evenly">
             <div class="col-8">
-              <div class="card">
-                <div class="card-content-1 border-bottom">
-                  <div class="card-header">이름</div>
-                  <div class="card-body">홍태광</div>
-                </div>
-                <div class="card-content-2 border-bottom">
-                  <div class="card-header">소개</div>
-                  {% comment %} admin.introduce {% endcomment %}
-                  <div class="card-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vitae quis obcaecati facilis enim ratione excepturi ab animi commodi, earum optio quo illum. Tenetur sint nobis esse eveniet provident. Optio!</div>
-                </div>
-                <div class="card-content-3">
-                  <div class="card-header">github</div>
-                  <div class="card-body">https://github.com/Imshyeon</div>
-                </div>
+              <div class="admin-name mb-4">
+                <h3>홍태광</h3>
+              </div>
+              <div class="admin-self-introduce mb-4">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio nam fuga quo consequatur reiciendis consectetur aliquam obcaecati ipsa! Necessitatibus, neque odit. Odit repellendus dolorum repudiandae optio suscipit rerum minima velit.</p>
+              </div>
+              <div class="admin-github">
+                <p class="mb-2">
+                  <a href="https://github.com/Imshyeon"><i class="fab fa-github fa-lg text-primary me-3 color-changed"></i>github.com/Imshyeon</a>
+                </p>
               </div>
             </div>
           </div>

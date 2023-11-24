@@ -1,4 +1,8 @@
-from django.shortcuts import render, redirect
+#---안개관련---
+from django.core.paginator import Paginator
+from django.db.models import Q
+from .models import ContactMessage
+from django.shortcuts import render, redirect , get_object_or_404
 #---회원관련---
 from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm
@@ -6,10 +10,13 @@ from django.contrib.auth import authenticate, logout as auth_logout, login as au
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils import timezone
-from .models import UploadedFile
+from .models import Profile, UploadedFile
+from .forms import ProfileForm
 # --- fog 관련 ---
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
+from .models import dehazing
+from finalProject.ml_utils.inference import inference, FLAGS
 import os
 
 def home(request):
@@ -38,8 +45,6 @@ def support(request):
 def review_detail(request):
     return render(request, "pages/user/review-detail.html")
 
-def about_us(request):
-    return render(request, "pages/community/aboutus.html")
 
 def news_list(request):
     return render(request, "pages/community/news-list.html")
@@ -47,20 +52,65 @@ def news_list(request):
 def news_detail(request):
     return render(request, "pages/community/news-detail.html")
 
-def user_profile(request):
-    return render(request, "pages/user/user-profile.html")
+def contact_list(request,category=None):
+    page_number = request.GET.get('page','1')
+    print("Page number:", page_number)
+    contact_messages = ContactMessage.objects.all()
+    print("Contact Messages:", contact_messages)
+    kw = request.GET.get('contact_kw','') # 검색어
+
+    if category:
+        contact_messages = contact_messages.filter(category=category)
+
+    if kw:
+        contact_messages = contact_messages.filter(
+            Q(title__icontains=kw) |  # 제목 검색
+            Q(message__icontains=kw) |  # 내용 검색
+            Q(email__icontains=kw)  # 이메일 검색
+        ).distinct()
+    paginator = Paginator(contact_messages, 10)
+    page_obj = paginator.get_page(page_number)
+    context = {'recent_page':page_obj,'page':page_number,'contact_messages':contact_messages, 'kw':kw}
+    return render(request, "pages/contact/contact-list.html",context)
+
+def contact_list_category(request,category):
+    return contact_list(request, category=category)
+def contact_detail(request, post_num):
+    contact_message = get_object_or_404(ContactMessage, post_num=post_num)
+
+    return render(request, "pages/contact/contact-detail.html",{'contact_message':contact_message})
 
 
-def admin_profile(request):
-    return render(request, "pages/admin/admin-profile.html")
+def submit_contact(request):
+    page_number = request.GET.get('page','1')
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        title = request.POST.get('title')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        category = request.POST.get('category')
 
+        contact_message = ContactMessage(
+            first_name = first_name,
+            last_name = last_name,
+            title = title,
+            email = email,
+            category = category,
+            message = message,
 
-def contact_list(request):
-    return render(request, "pages/contact/contact-list.html")
+        )
+        contact_message.save()
+        print(contact_message)
+        return render(request, 'pages/contact/contact.html', {'contact_message': contact_message})
 
+    return HttpResponse("Invalid Request Method")
 
-def contact_detail(request):
-    return render(request, "pages/contact/contact-detail.html")
+def delete_contact(request):
+    if request.method == 'POST':
+        selected_contacts = request.POST.getlist('selected_boxes')
+        ContactMessage.objects.filter(post_num__in=selected_contacts).delete()
+    return render(request,'pages/contact/contact-list.html')
 
 # ========================== 에러 페이지 ===============================
 
@@ -130,7 +180,6 @@ def forgot_id(request):
     return render(request, 'pages/user/forgot-id.html')
 
 
-
     # 사용자 검증과 비밀번호 재설정 함수
 def check_user_and_reset_password(request, user, new_password):
     form = SetPasswordForm(user, {'new_password1': new_password, 'new_password2': new_password})
@@ -177,6 +226,78 @@ def forgot_pw(request):
     return render(request, 'pages/user/forgot-password.html', {'password_found': False})
 
 
+
+def user_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ProfileForm(instance=request.user.profile)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'pages/user/user-profile.html', context)
+
+
+def admin_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ProfileForm(instance=request.user.profile)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'pages/admin/admin-profile.html', context)
+
+
+def about_us(request):
+    profiles = []
+
+    # 민제님 프로필 조회
+    try:
+        user_a = User.objects.get(last_name="김민제", username="mj1")
+        profiles.append(Profile.objects.get(user=user_a))
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        pass 
+
+    # 수현님 프로필 조회
+    try:
+        user_b = User.objects.get(last_name="강수현", username="sh1")
+        profiles.append(Profile.objects.get(user=user_b))
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        pass  
+
+    # 동엽님 프로필 조회
+    try:
+        user_b = User.objects.get(last_name="이동엽", username="dy1")
+        profiles.append(Profile.objects.get(user=user_b))
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        pass
+
+    # 우림님 프로필 조회
+    try:
+        user_b = User.objects.get(last_name="장우림", username="wl1")  
+        profiles.append(Profile.objects.get(user=user_b))
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        pass
+
+    # 홍태광 프로필 조회
+    try:
+        user_htk96 = User.objects.get(last_name="홍태광", username="htk96")
+        profiles.append(Profile.objects.get(user=user_htk96))
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        pass
+
+    context = {
+        'profiles': profiles,
+    }
+    return render(request, 'pages/community/aboutus.html', context)
+
     
 def get_today_visitors():
     today = timezone.now().date()
@@ -202,7 +323,45 @@ def my_stats_view(request):
 
 # --- fog 관련 ---
 def fog(request):
-    return render(request, 'pages/test/fog.html')
+    context = {}
+
+    if request.method == 'POST' and request.FILES.get('image'):
+        # 이미지 파일 저장
+        image_file = request.FILES['image']
+        fs = FileSystemStorage(location='before_fog/')
+        filename = fs.save(image_file.name, image_file)
+        uploaded_file_url = fs.url(filename)
+
+        # 데이터베이스에 이미지 정보 저장
+        new_image = dehazing(original_image=filename)
+        new_image.save()
+
+        # inference 설정
+        input_file_path = os.path.join(fs.location, filename)
+        output_file_path = os.path.join('after_fog', 'processed_' + filename)
+        FLAGS.model = 'finalProject/ml_models/Hazy_to_Clear.pb'
+        FLAGS.input_file = input_file_path  # 단일 파일 경로 설정
+        FLAGS.output_file = output_file_path  # 결과 파일 경로 설정
+        
+        # AI 모델을 사용하여 이미지 처리
+        model_path = 'finalProject/ml_models/Hazy_to_Clear.pb'
+        image_size = 256
+        inference(input_file_path, output_file_path, model_path, image_size)
+
+        # 처리된 이미지의 URL
+        processed_file_url = '/after_fog/processed_' + filename
+
+        # 데이터베이스에 처리된 이미지 정보 업데이트
+        new_image.processed_image = 'processed_' + filename
+        new_image.save()
+
+        context = {
+            'uploaded_file_url': uploaded_file_url,
+            'processed_file_url': processed_file_url
+        }
+
+    return render(request, 'pages/test/fog.html', context)
+
 
 def upload_file(request):
     if request.method == 'POST':
@@ -225,3 +384,5 @@ def upload_file(request):
 
 # def process_file(request):
     # 파일을 처리 > after_fog에 저장 > 웹페이지에 표출 구현 예정
+    
+# --- 민제님 views ---

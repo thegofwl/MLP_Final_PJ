@@ -5,7 +5,7 @@
 {% block content %}
   <style>
     .card {
-      height: auto;
+      height: 100%;
       background: none;
       border: none;
     }
@@ -16,12 +16,8 @@
     .progressBar {
       width: 500px;
     }
-    .section{
+    .section {
       margin-bottom: 18rem;
-    }
-    .btn-for-process{
-      padding:.375rem .75rem;
-      margin-bottom: 0.5rem;
     }
   </style>
   <div class="section">
@@ -29,7 +25,6 @@
       <div class="card">
         <div class="card-body">
           <div class="before-upload mt-5">
-            <h3 id="uploadText" class="row justify-content-center mb-5">파일을 업로드 해주세요.</h3>
             <div id="loading-zone" aria-busy="true" class="text-center justify-center justify-content-center items-center">
               <p>Loading...</p>
               <div class="card mb-5">
@@ -40,42 +35,34 @@
               </div>
             </div>
           </div>
-          <div class="uploaded-content" style="display: none;">
-            <div class="row justify-content-center">
-              {% comment %}결과 사진/영샹{% endcomment %}
-              <div class="col-lg-7 mb-4 mb-lg-0">
-                <video id="uploadedVideo" class="embed-responsive" style="display: none;" autoplay></video>
-                <img id="uploadedImage" class="img-fluid" style="display: none;" alt="Uploaded Image" />
-              </div>
-              <div class="col-lg-4 ps-lg-2">
-                <div class="d-flex mb-3 service-alt">
-                  <div>
-                    <span class="bi-wallet-fill me-4"></span>
-                  </div>
-                  <div>
-                    <h3>그래프</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam blanditiis eum corporis quas a explicabo officiis sapiente hic unde expedita obcaecati repudiandae, repellat, exercitationem sunt iusto! Obcaecati minus illo nam!</p>
-                  </div>
-                </div>
 
-                <div class="d-flex mb-3 service-alt">
-                  <div>
-                    <span class="bi-pie-chart-fill me-4"></span>
+          <div class="uploaded-content">
+            <div class="row justify-content-center">
+              <div class="col-lg-7 mb-4 mb-lg-0">
+                {% comment %} <video id="uploadedVideo" class="embed-responsive" style="display: none;" autoplay></video> {% endcomment %}
+                {% comment %} <img id="uploadedImage" class="img-fluid" style="display: none;" alt="Uploaded Image" /> {% endcomment %}
+
+                {% if uploaded_file_url %}
+                  <div class="image-display">
+                    <p>Original Image:</p>
+                    <img id="uploadedImage" class="img-fluid" style="display: none;" src="{{ uploaded_file_url }}" alt="Original Image" />
+
+                    <p>Processed Image:</p>
+                    <img id="uploadedImage" class="img-fluid" style="display: none;" src="{{ processed_file_url }}" alt="Processed Image" />
                   </div>
-                  <div>
-                    <h3>수치</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam blanditiis eum corporis quas a explicabo officiis sapiente hic unde expedita obcaecati repudiandae, repellat, exercitationem sunt iusto! Obcaecati minus illo nam!</p>
-                  </div>
-                </div>
+                {% else %}
+                  <!-- 사용자에게 이미지 업로드를 유도하는 메시지 표시 -->
+                  <h3 id="uploadText" class="row justify-content-center mb-5">파일을 업로드 해주세요.</h3>
+                {% endif %}
               </div>
             </div>
           </div>
-          <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_file' %}">
+
+          <form id="uploadForm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="uploadBtn" class="file-upload d-flex justify-content-center mt-3" style="bottom: 2px; right: 50%;">
-              <input type="file" style="display: none;" id="fileInput" accept="image/*, video/*" name="myfile" onchange="toggleProcessButton()" />
-              <label for="fileInput" class="btn btn-primary rounded-full">UPLOAD</label>
-              <button type="submit" id="processBtn" class="btn btn-primary rounded-full ml-3 btn-for-process" style="display: none;">PROCESS!</button>
+              <input type="file" style="display: none;" id="fileInput" accept="image/*, video/*" name="image" />
+              <label for="fileInput" type="submit" class="btn btn-primary rounded-full ml-3 btn-for-process">Upload and Process</label>
             </div>
           </form>
         </div>
@@ -83,18 +70,5 @@
     </div>
   </div>
 
-  <script src="{% static 'js/custom/fog.js' %}?ver=1"></script>
-  
-  <script>
-    function toggleProcessButton() {    // PROCESS! 버튼 숨기기 추가
-      var fileInput = document.getElementById('fileInput');
-      var processBtn = document.getElementById('processBtn');
-      
-      if (fileInput.files.length > 0) {
-        processBtn.style.display = 'block';
-      } else {
-        processBtn.style.display = 'none';
-      }
-    }
-  </script>
+  <script src="{% static 'js/custom/fog.js' %}?ver=2"></script>
 {% endblock %}
